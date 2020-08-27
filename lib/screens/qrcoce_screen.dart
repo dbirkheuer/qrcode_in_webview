@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_qr_bar_scanner/qr_bar_scanner_camera.dart';
 import 'package:qrcode_in_webview/screens/webview_screen.dart';
 import 'package:qrcode_in_webview/utils/colors.dart';
 
@@ -8,6 +9,36 @@ class QRCodeScreen extends StatefulWidget {
 }
 
 class _QRCodeScreenState extends State<QRCodeScreen> {
+  bool _camState = false;
+
+  _qrCallback(String url) {
+    setState(() {
+      _camState = false;
+
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => WebViewScreen(url)),
+          ModalRoute.withName('screens/qrcode_screen'));
+    });
+  }
+
+  _scanCode() {
+    setState(() {
+      _camState = true;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scanCode();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,31 +54,30 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
               textAlign: TextAlign.center,
               style: TextStyle(color: ColorUtils.branco_texto, fontSize: 25.0),
             ),
-            SizedBox(height: 50),
-            Image.asset(
-              'assets/logo.png',
-              width: 200.0,
-              height: 200.0,
-            ),
+            _camState
+                ? Center(
+                    child: SizedBox(
+                      height: 300,
+                      width: 300,
+                      child: QRBarScannerCamera(
+                        onError: (context, error) => Text(
+                          error.toString(),
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        qrCodeCallback: (url) {
+                          _qrCallback(url);
+                        },
+                      ),
+                    ),
+                  )
+                : Center(
+                    child: Image.asset(
+                      'assets/logo.png',
+                      width: 200.0,
+                      height: 200.0,
+                    ),
+                  ),
             SizedBox(height: 100),
-            RaisedButton(
-              textColor: ColorUtils.azul_escuro,
-              color: ColorUtils.branco_texto,
-              child: Text(
-                "Iniciar inspeção",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: ColorUtils.azul_escuro, fontSize: 20.0),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => WebViewScreen()),
-                );
-              },
-              shape: new RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(30.0),
-              ),
-            ),
           ],
         ),
       ),
@@ -56,6 +86,5 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
 }
 
 //String url = await scanner.scan();
-
 
 // https://pub.dev/packages/fast_qr_reader_view

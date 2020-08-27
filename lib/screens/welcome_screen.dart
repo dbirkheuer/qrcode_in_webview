@@ -24,7 +24,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             Text(
               "Olá, seja bem vindo!",
               textAlign: TextAlign.center,
-              style: TextStyle(color: ColorUtils.branco_texto, fontSize: 25.0),
+              style: TextStyle(color: ColorUtils.branco_texto, fontSize: 28.0),
             ),
             SizedBox(height: 100),
             Image.asset(
@@ -39,7 +39,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               child: Text(
                 "Iniciar inspeção",
                 textAlign: TextAlign.center,
-                style: TextStyle(color: ColorUtils.azul_escuro, fontSize: 20.0),
+                style: TextStyle(color: ColorUtils.azul_escuro, fontSize: 22.0),
               ),
               onPressed: () {
                 Navigator.push(
