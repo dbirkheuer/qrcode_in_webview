@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:qrcode_in_webview/screens/qrcoce_screen.dart';
 import 'package:qrcode_in_webview/utils/colors.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewScreen extends StatefulWidget {
   String url;
@@ -43,11 +43,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
               textAlign: TextAlign.center,
               style: TextStyle(color: ColorUtils.branco_texto, fontSize: 20.0),
             )),
-        body: WebviewScaffold(
-          url: url,
-          clearCookies: false,
-          appCacheEnabled: true,
-            withJavascript: true,
+        body: WebView(
+          initialUrl: url,
         ),
       ),
     );
