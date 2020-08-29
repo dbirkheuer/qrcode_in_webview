@@ -48,17 +48,17 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            SizedBox(height: 30),
+            SizedBox(height: 10),
             Text(
               "Centralize o qrcode do equipamento para iniciar a inspeção!",
               textAlign: TextAlign.center,
-              style: TextStyle(color: ColorUtils.branco_texto, fontSize: 25.0),
+              style: TextStyle(color: ColorUtils.branco_texto, fontSize: 28.0),
             ),
             _camState
                 ? Center(
                     child: SizedBox(
-                      height: 300,
-                      width: 300,
+                      height: 280,
+                      width: 280,
                       child: QRBarScannerCamera(
                         onError: (context, error) => Text(
                           error.toString(),
@@ -77,7 +77,15 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                       height: 200.0,
                     ),
                   ),
-            SizedBox(height: 100),
+            SizedBox(height: 50),
+            Container(
+              margin: EdgeInsets.only(bottom: 5.0, right: 20.0),
+              alignment: Alignment.topRight,
+              child: Image.asset(
+                'assets/logo_branco.png',
+                height: 30,
+              ),
+            ),
           ],
         ),
       ),

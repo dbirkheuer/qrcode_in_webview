@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:qrcode_in_webview/screens/qrcoce_screen.dart';
 import 'package:qrcode_in_webview/utils/colors.dart';
 
@@ -51,7 +52,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 borderRadius: new BorderRadius.circular(30.0),
               ),
             ),
-            SizedBox(height: 30),
+            Container(
+              margin: EdgeInsets.only(bottom: 5.0, right: 20.0),
+              alignment: Alignment.topRight,
+              child: Image.asset(
+                'assets/logo_branco.png',
+                height: 30,
+              ),
+            ),
           ],
         ),
       ),
