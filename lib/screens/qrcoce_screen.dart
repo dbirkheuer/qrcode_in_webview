@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_qr_bar_scanner/qr_bar_scanner_camera.dart';
-import 'package:qrcode_in_webview/screens/webview_screen.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:qrcode_in_webview/utils/colors.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 class QRCodeScreen extends StatefulWidget {
   @override
@@ -15,10 +16,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
     setState(() {
       _camState = false;
 
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => WebViewScreen(url)),
-          ModalRoute.withName('screens/qrcode_screen'));
+      this._openInWebview(url);
     });
   }
 
@@ -37,6 +35,39 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<Null> _openInWebview(String url) async {
+    if (await url_launcher.canLaunch(url)) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (ctx) => WebviewScaffold(
+                initialChild: Center(child: CircularProgressIndicator()),
+                url: url,
+                appBar: AppBar(
+                    leading: IconButton(
+                        icon: Icon(Icons.arrow_back,
+                            color: ColorUtils.branco_texto),
+                        onPressed: () => Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => QRCodeScreen()),
+                            ModalRoute.withName('screens/QRCodeScreen'))),
+                    backgroundColor: ColorUtils.azul_escuro,
+                    centerTitle: true,
+                    title: Text(
+                      "Scan Task",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: ColorUtils.branco_texto, fontSize: 20.0),
+                    )),
+              )));
+    } else {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text("URL $url não pode ser aberta."),
+        ),
+      );
+    }
   }
 
   @override
@@ -92,7 +123,3 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
     );
   }
 }
-
-//String url = await scanner.scan();
-
-// https://pub.dev/packages/fast_qr_reader_view
