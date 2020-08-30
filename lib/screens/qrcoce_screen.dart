@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_qr_bar_scanner/qr_bar_scanner_camera.dart';
+//import 'package:flutter_qr_bar_scanner/qr_bar_scanner_camera.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:qrcode_in_webview/utils/colors.dart';
+import 'package:qrcode_reader/qrcode_reader.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 class QRCodeScreen extends StatefulWidget {
@@ -70,55 +71,34 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
     }
   }
 
+  Future<String> _barcodeString;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorUtils.azul_escuro,
-      body: Container(
-        alignment: Alignment.topCenter,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            SizedBox(height: 10),
-            Text(
-              "Centralize o qrcode do equipamento para iniciar a inspeção!",
-              textAlign: TextAlign.center,
-              style: TextStyle(color: ColorUtils.branco_texto, fontSize: 28.0),
-            ),
-            _camState
-                ? Center(
-                    child: SizedBox(
-                      height: 280,
-                      width: 280,
-                      child: QRBarScannerCamera(
-                        onError: (context, error) => Text(
-                          error.toString(),
-                          style: TextStyle(color: Colors.red),
-                        ),
-                        qrCodeCallback: (url) {
-                          _qrCallback(url);
-                        },
-                      ),
-                    ),
-                  )
-                : Center(
-                    child: Image.asset(
-                      'assets/logo.png',
-                      width: 200.0,
-                      height: 200.0,
-                    ),
-                  ),
-            SizedBox(height: 50),
-            Container(
-              margin: EdgeInsets.only(bottom: 5.0, right: 20.0),
-              alignment: Alignment.topRight,
-              child: Image.asset(
-                'assets/logo_branco.png',
-                height: 30,
-              ),
-            ),
-          ],
-        ),
+    return new Scaffold(
+      appBar: new AppBar(
+        title: const Text('QRCode Reader Example'),
+      ),
+      body: new Center(
+          child: new FutureBuilder<String>(
+              future: _barcodeString,
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                return new Text(snapshot.data != null ? snapshot.data : '');
+              })),
+      floatingActionButton: new FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            _barcodeString = new QRCodeReader()
+                .setAutoFocusIntervalInMs(200)
+                .setForceAutoFocus(true)
+                .setTorchEnabled(true)
+                .setHandlePermissions(true)
+                .setExecuteAfterPermissionGranted(true)
+                .scan();
+          });
+        },
+        tooltip: 'Reader the QRCode',
+        child: new Icon(Icons.add_a_photo),
       ),
     );
   }
