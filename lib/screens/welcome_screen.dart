@@ -1,8 +1,10 @@
+import 'package:barcode_scan/barcode_scan.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:qrcode_in_webview/utils/colors.dart';
-import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 class WelcomeScreen extends StatefulWidget {
@@ -45,7 +47,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 style: TextStyle(color: ColorUtils.azul_escuro, fontSize: 22.0),
               ),
               onPressed: () {
-                _scan();
+                _scanQR();
               },
               shape: new RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(30.0),
@@ -65,12 +67,32 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Future _scan() async {
-    String url = await scanner.scan();
-
-    setState(() {
-      _openInWebview(url);
-    });
+  Future _scanQR() async {
+    try {
+      String qrResult = await BarcodeScanner.scan();
+      setState(() {
+        _openInWebview(qrResult);
+      });
+    } on PlatformException catch (ex) {
+      if (ex.code == BarcodeScanner.CameraAccessDenied) {
+        setState(() {
+          exibeMensagem("Utilização da câmera não permitida.");
+        });
+      } else {
+        setState(() {
+          exibeMensagem("Erro desconhecido. $ex");
+        });
+      }
+    } on FormatException {
+      setState(() {
+        exibeMensagem("Erro desconhecido.");
+      });
+      ;
+    } catch (ex) {
+      setState(() {
+        exibeMensagem("Erro desconhecido. $ex");
+      });
+    }
   }
 
   Future<Null> _openInWebview(String url) async {
@@ -98,11 +120,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     )),
               )));
     } else {
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text("URL $url não pode ser aberta."),
-        ),
-      );
+      exibeMensagem("A url $url não pode ser aberta");
     }
+  }
+
+  void exibeMensagem(String mensagem) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Text(mensagem),
+      ),
+    );
   }
 }
