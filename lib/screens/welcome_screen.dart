@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:qrcode_in_webview/screens/scanner_screen.dart';
 import 'package:qrcode_in_webview/screens/webview_screen.dart';
 import 'package:qrcode_in_webview/utils/colors.dart';
-import 'package:qrscan/qrscan.dart' as scanner;
-import 'package:url_launcher/url_launcher.dart' as url_launcher;
+
+
 
 class WelcomeScreen extends StatefulWidget {
   WelcomeScreen({Key key, this.title}) : super(key: key);
@@ -45,7 +46,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 style: TextStyle(color: ColorUtils.azul_escuro, fontSize: 22.0),
               ),
               onPressed: () {
-                _scan();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ScannerScreen()));
               },
               shape: new RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(30.0),
@@ -63,24 +64,5 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
       ),
     );
-  }
-
-  Future _scan() async {
-    String url = await scanner.scan();
-
-    _openInWebview(url);
-  }
-
-  Future<Null> _openInWebview(String url) async {
-    if (await url_launcher.canLaunch(url)) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => WebviewScreen(url)));
-    } else {
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text("URL $url não pode ser aberta."),
-        ),
-      );
-    }
   }
 }
