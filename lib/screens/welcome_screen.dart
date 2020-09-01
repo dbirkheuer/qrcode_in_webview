@@ -66,9 +66,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Future _scan() async {
-    String url = await scanner.scan();
-
-    _openInWebview(url);
+    await scanner.scan().then((value) => _openInWebview(value)).catchError(() {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Erro ao abrir a camera."),
+        ),
+      );
+    });
   }
 
   Future<Null> _openInWebview(String url) async {
@@ -103,6 +107,4 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       );
     }
   }
-
-
 }
