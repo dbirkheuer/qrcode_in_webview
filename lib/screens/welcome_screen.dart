@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:qrcode_in_webview/screens/scanner_screen.dart';
-import 'package:qrcode_in_webview/screens/webview_screen.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:qrcode_in_webview/utils/colors.dart';
-
-
+import 'package:qrscan/qrscan.dart' as scanner;
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 class WelcomeScreen extends StatefulWidget {
   WelcomeScreen({Key key, this.title}) : super(key: key);
@@ -46,7 +45,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 style: TextStyle(color: ColorUtils.azul_escuro, fontSize: 22.0),
               ),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ScannerScreen()));
+                _scan();
               },
               shape: new RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(30.0),
@@ -65,4 +64,45 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ),
     );
   }
+
+  Future _scan() async {
+    String url = await scanner.scan();
+
+    _openInWebview(url);
+  }
+
+  Future<Null> _openInWebview(String url) async {
+    if (await url_launcher.canLaunch(url)) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (ctx) => WebviewScaffold(
+                initialChild: Center(child: CircularProgressIndicator()),
+                url: url,
+                appBar: AppBar(
+                    leading: IconButton(
+                        icon: Icon(Icons.arrow_back,
+                            color: ColorUtils.branco_texto),
+                        onPressed: () => Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => WelcomeScreen()),
+                            ModalRoute.withName('screens/QRCodeScreen'))),
+                    backgroundColor: ColorUtils.azul_escuro,
+                    centerTitle: true,
+                    title: Text(
+                      "Scan Task",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: ColorUtils.branco_texto, fontSize: 20.0),
+                    )),
+              )));
+    } else {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text("URL $url não pode ser aberta."),
+        ),
+      );
+    }
+  }
+
+
 }
