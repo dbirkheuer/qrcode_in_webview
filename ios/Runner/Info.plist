@@ -23,9 +23,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>Using the library for ...</string>
+    <string>O aplicativo precisa ter acesso a galeria.</string>
     <key>NSMicrophoneUsageDescription</key>
-    <string>Using the mic for ...</string>
+    <string>O aplicativo precisa utilizar o microfone.</string>
     <key>NSCameraUsageDescription</key>
 	<string>O aplicativo ScanTask precisa de acesso a câmera para leitura de QR Code.</string>
 	<key>UILaunchStoryboardName</key>
