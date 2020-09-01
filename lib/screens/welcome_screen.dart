@@ -70,26 +70,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     try {
       String qrResult = await BarcodeScanner.scan();
       setState(() {
-        _openInWebview(qrResult);
+        _openInWebview(context, qrResult);
       });
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
-          exibeMensagem("Utilização da câmera não permitida.");
+          exibeMensagem(context, "Utilização da câmera não permitida.");
         });
       } else {
         setState(() {
-          exibeMensagem("Erro desconhecido. $ex");
+          exibeMensagem(context, "Erro desconhecido. $ex");
         });
       }
     } on FormatException {
       setState(() {
-        exibeMensagem("Erro desconhecido.");
+        exibeMensagem(context, "Erro desconhecido.");
       });
       ;
     } catch (ex) {
       setState(() {
-        exibeMensagem("Erro desconhecido. $ex");
+        exibeMensagem(context, "Erro desconhecido. $ex");
       });
     }
   }
@@ -119,11 +119,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     )),
               )));
     } else {
-      exibeMensagem("A url $url não pode ser aberta");
+      exibeMensagem(context, "A url $url não pode ser aberta");
     }
   }
 
-  void exibeMensagem(String mensagem) {
+  void exibeMensagem(BuildContext context, String mensagem) {
     Scaffold.of(context).showSnackBar(
       SnackBar(
         content: Text(mensagem),
