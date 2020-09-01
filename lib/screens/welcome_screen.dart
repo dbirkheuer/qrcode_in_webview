@@ -75,21 +75,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
-          exibeMensagem(context, "Utilização da câmera não permitida.");
+          _showDialog("Você precisa permitir a utilização da câmera.");
         });
       } else {
         setState(() {
-          exibeMensagem(context, "Erro desconhecido. $ex");
+          _showDialog("Erro desconhecido. $ex");
         });
       }
     } on FormatException {
       setState(() {
-        exibeMensagem(context, "Erro desconhecido.");
+        _showDialog("Erro desconhecido.");
       });
       ;
     } catch (ex) {
       setState(() {
-        exibeMensagem(context, "Erro desconhecido. $ex");
+        _showDialog("Erro desconhecido. $ex");
       });
     }
   }
@@ -119,15 +119,29 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     )),
               )));
     } else {
-      exibeMensagem(context, "A url $url não pode ser aberta");
+      _showDialog("A url $url não pode ser aberta");
     }
   }
 
-  void exibeMensagem(BuildContext context, String mensagem) {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text(mensagem),
-      ),
+  void _showDialog(String mensagem) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // retorna um objeto do tipo Dialog
+        return AlertDialog(
+          title: new Text("Opsss..."),
+          content: new Text(mensagem),
+          actions: <Widget>[
+            // define os botões na base do dialogo
+            new FlatButton(
+              child: new Text("Fechar"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
