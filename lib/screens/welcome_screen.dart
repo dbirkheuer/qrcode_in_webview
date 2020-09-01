@@ -1,6 +1,5 @@
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
@@ -47,7 +46,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 style: TextStyle(color: ColorUtils.azul_escuro, fontSize: 22.0),
               ),
               onPressed: () {
-                _scanQR();
+                _scanQR(context);
               },
               shape: new RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(30.0),
@@ -67,7 +66,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Future _scanQR() async {
+  Future _scanQR(BuildContext context) async {
     try {
       String qrResult = await BarcodeScanner.scan();
       setState(() {
@@ -95,7 +94,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     }
   }
 
-  Future<Null> _openInWebview(String url) async {
+  Future<Null> _openInWebview(BuildContext context, String url) async {
     if (await url_launcher.canLaunch(url)) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (ctx) => WebviewScaffold(
