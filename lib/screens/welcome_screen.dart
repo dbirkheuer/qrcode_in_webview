@@ -2,7 +2,7 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:qrcode_in_webview/screens/webview_screen.dart';
 import 'package:qrcode_in_webview/utils/colors.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
@@ -73,7 +73,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       setState(() {
         _openInWebview(context, qrResult);
       });
-      
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
@@ -84,12 +83,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           _showDialog("Erro desconhecido. $ex");
         });
       }
-    } on FormatException {
-      setState(() {
-        _showDialog("Erro desconhecido.");
-      });
-      ;
-    } catch (ex) {
+    } on FormatException {} catch (ex) {
       setState(() {
         _showDialog("Erro desconhecido. $ex");
       });
@@ -98,28 +92,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Future<Null> _openInWebview(BuildContext context, String url) async {
     if (await url_launcher.canLaunch(url)) {
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (ctx) => WebviewScaffold(
-                initialChild: Center(child: CircularProgressIndicator()),
-                url: url,
-                appBar: AppBar(
-                    leading: IconButton(
-                        icon: Icon(Icons.arrow_back,
-                            color: ColorUtils.branco_texto),
-                        onPressed: () => Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => WelcomeScreen()),
-                            ModalRoute.withName('screens/QRCodeScreen'))),
-                    backgroundColor: ColorUtils.azul_escuro,
-                    centerTitle: true,
-                    title: Text(
-                      "Scan Task",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: ColorUtils.branco_texto, fontSize: 20.0),
-                    )),
-              )));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => WebviewState(url)));
     } else {
       _showDialog("A url $url não pode ser aberta");
     }
