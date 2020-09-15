@@ -69,9 +69,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Future _scanQR(BuildContext context) async {
     try {
       String qrResult = await BarcodeScanner.scan();
+
       setState(() {
         _openInWebview(context, qrResult);
       });
+      
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
