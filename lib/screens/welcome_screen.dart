@@ -2,6 +2,7 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:qrcode_in_webview/screens/webview_dois.dart';
 import 'package:qrcode_in_webview/screens/webview_screen.dart';
 import 'package:qrcode_in_webview/utils/colors.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
@@ -92,8 +93,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Future<Null> _openInWebview(BuildContext context, String url) async {
     if (await url_launcher.canLaunch(url)) {
+      // Navigator.push(
+      //     context, MaterialPageRoute(builder: (context) => WebviewState(url)));
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => WebviewState(url)));
+          context, MaterialPageRoute(builder: (context) => MyWebviewDois(url)));
     } else {
       _showDialog("A url $url não pode ser aberta");
     }

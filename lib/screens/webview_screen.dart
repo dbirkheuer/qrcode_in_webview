@@ -33,6 +33,9 @@ class _WebviewStateState extends State<WebviewState> {
             key: _key,
             initialUrl: this.url,
             javascriptMode: JavascriptMode.unrestricted,
+            gestureNavigationEnabled: true,
+            
+
             onPageFinished: (finish) {
               setState(() {
                 isLoading = false;
